@@ -1,0 +1,8 @@
+{
+  "name": "Remix Antarctic Digital Twin",
+  "description": "Digital twin monitoring platform for India\u0027s Antarctic research stations Maitri and Bharati.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

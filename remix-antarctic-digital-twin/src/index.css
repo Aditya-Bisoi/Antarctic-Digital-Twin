@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sweep-rotate {
+  animation: radar-sweep 4.5s linear infinite;
+  transform-origin: center center;
+}
+
+.phosphor-glow {
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
+}
+
+.grid-glow {
+  filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.15));
+}

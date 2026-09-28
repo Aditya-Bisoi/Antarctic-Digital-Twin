@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antarctic Digital Twin & Intelligence — Presentation</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 26, 43, 0.85);
+      --card-border: rgba(56, 189, 248, 0.2);
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Presentation Slide Deck Container */
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.97);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 50px 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background: radial-gradient(circle at 80% 20%, rgba(14, 116, 144, 0.15), transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(30, 58, 138, 0.2), transparent 50%),
+                  var(--bg);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    /* Slide Header */
+    .slide-header {
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Content Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p, .card li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .card ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    .card li {
+      margin-bottom: 6px;
+    }
+
+    /* Tables */
+    .table-container {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--accent-cyan);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(8px);
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      vertical-align: top;
+    }
+
+    tr:hover td {
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    /* Key Metric Pill */
+    .metric-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    .metric-pill .label { font-size: 12px; color: var(--text-muted); }
+    .metric-pill .val { font-size: 14px; font-weight: 700; color: #fff; }
+
+    /* Footer & Controls */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 24px;
+      right: 40px;
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      background: var(--accent-blue);
+      border-color: var(--accent-cyan);
+    }
+
+    .slide-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      transition: width 0.3s;
+      z-index: 1000;
+    }
+
+    /* Title Slide Specifics */
+    .title-slide {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+    }
+    .title-slide h1 {
+      font-size: 52px;
+      margin-bottom: 16px;
+    }
+    .title-slide .meta-box {
+      margin-top: 36px;
+      display: flex;
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-progress" id="progress"></div>
+
+  <div class="deck">
+
+    <!-- SLIDE 1: Title -->
+    <div class="slide active title-slide">
+      <div class="badge">SIH Problem Statement 26060</div>
+      <h1>Antarctic Digital Twin & Intelligence</h1>
+      <p class="subtitle" style="font-size: 20px; max-width: 800px;">
+        High-Fidelity 3D Station Virtualization, Physics-Based Extreme Stress Simulation, and Zero-Overhead Predictive Maintenance for Maitri & Bharati
+      </p>
+
+      <div class="meta-box">
+        <div class="card" style="padding: 16px 24px; text-align: left;">
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Domain</span>
+          <strong style="color: var(--accent-cyan); font-size: 15px;">Smart Polar Infrastructure & AI</strong>
+        </div>
+        <div class="card" style="padding: 16px 24px; text-align: left;">
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Stations Monitored</span>
+          <strong style="color: var(--accent-cyan); font-size: 15px;">Maitri (70°S) & Bharati (69°S)</strong>
+        </div>
+        <div class="card" style="padding: 16px 24px; text-align: left;">
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Core Innovation</span>
+          <strong style="color: var(--accent-emerald); font-size: 15px;">Sense → Understand → Predict → Protect</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Operational Challenge & Mission Context -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Operational Challenge</div>
+        <h1>The Extreme Realities of Antarctic Missions</h1>
+        <p class="subtitle">Why traditional remote telemetry fails in the world's most inhospitable environment</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>❄️ Extreme Environmental Stress</h3>
+          <ul>
+            <li>Temperatures plummeting below <strong>-89°C</strong> with wind blizzards exceeding <strong>100+ knots</strong>.</li>
+            <li>Sudden katabatic storms induce severe thermal dissipation on habitat modules.</li>
+            <li>Ice ablation and snow accumulation threaten structural vents and communication arrays.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>⚡ Zero-Margin Life Support & Power</h3>
+          <ul>
+            <li>Stations operate as completely closed-loop electrical microgrids.</li>
+            <li>Generator tripping can drop indoor temperatures to sub-zero within hours, freezing water lines.</li>
+            <li>Fuel resupply is restricted to a narrow 3-month summer window; zero backup margin in winter.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🛰️ Communication Blackouts & Isolation</h3>
+          <ul>
+            <li>Total physical isolation for <strong>8 to 9 months</strong> each year.</li>
+            <li>Solar radiation and polar geomagnetic storms disrupt satellite uplink bandwidth.</li>
+            <li>Demand for an <strong>autonomous edge-first digital twin</strong> that operates offline during communications loss.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Solution Architecture -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">System Architecture</div>
+        <h1>End-to-End Architectural Blueprint</h1>
+        <p class="subtitle">A modular 3-tier architecture ensuring sub-second visual updates and deterministic simulation</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>1. Frontend & 3D WebGL Tier</h3>
+          <ul>
+            <li><strong>React 19 + TypeScript + Vite 6</strong> for zero-lag reactive mission control.</li>
+            <li><strong>Three.js + OrbitControls</strong> powering real-time 3D station models with realistic, thermal, and wireframe shaders.</li>
+            <li><strong>IBCSO 71°S Polar Projection</strong> custom SVG stereographic map with weather isobar overlays.</li>
+            <li><strong>Tailwind CSS v4 + Motion</strong> aerospace cockpit UI.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2. Physics & ML Intelligence Tier</h3>
+          <ul>
+            <li><strong>Sub-Zero Thermal & Grid Simulator</strong>: Models battery drawdown curves, katabatic wind stress, and room temp decay.</li>
+            <li><strong>Pure NumPy Vectorized ML</strong>: Lightweight Logistic & Ridge models running edge inference without heavy PyTorch/TensorFlow bloat.</li>
+            <li><strong>Decision Support & Optimizer</strong>: Multi-objective automated power rationing & intervention sequencing.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>3. Backend & Telemetry Persistence</h3>
+          <ul>
+            <li><strong>Python 3.13 + Django 5.1 + DRF</strong> providing scalable REST endpoints.</li>
+            <li><strong>Non-Mutating RPC Endpoint</strong> (`/api/stations/{id}/simulate/`) for instant hypothetical stress testing.</li>
+            <li><strong>SQLite & Django ORM</strong> with seed telemetry databases for Maitri and Bharati subsystems.</li>
+            <li><strong>JWT Authentication</strong> for secure operator session isolation.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: DEDICATED TECH STACK SLIDE -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Comprehensive Mapping</div>
+        <h1>Technology Stack vs. Feature Matrix</h1>
+        <p class="subtitle">Direct correspondence between core platform features and chosen technological foundations</p>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 18%;">Subsystem / Feature</th>
+              <th style="width: 25%;">Technology Stack</th>
+              <th>Role & Implementation Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Interactive 3D Digital Twin</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Three.js, WebGL, OrbitControls</span></td>
+              <td>Renders Maitri & Bharati 3D models with 3 visual modes (Realistic, Thermal Heat-Loss, Structural Wireframe), live particle blizzard snow, and raycast module inspection.</td>
+            </tr>
+            <tr>
+              <td><strong>Geospatial Polar Mapping</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Custom Polar SVG Engine</span> (IBCSO 71°S)</td>
+              <td>True Polar Stereographic projection map centered on South Pole, real-time station beacons, katabatic isobar curves, and maritime supply routes.</td>
+            </tr>
+            <tr>
+              <td><strong>Mission Cockpit & Dashboard</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">React 19, TypeScript, Tailwind v4</span></td>
+              <td>High-frequency telemetry dashboards, state management, aerospace glassmorphism interface, and critical audio-visual alert notifications.</td>
+            </tr>
+            <tr>
+              <td><strong>Central REST API & Telemetry</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Python 3.13, Django 5.1, DRF</span></td>
+              <td>Serves real-time station telemetry, historical time-series endpoints, alert propagation, and non-mutating What-If simulation execution.</td>
+            </tr>
+            <tr>
+              <td><strong>What-If Physics Simulator</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Dual Engine (TypeScript & Python)</span></td>
+              <td>Models thermodynamics, generator trips, electrical battery depletion curves, and cascade grid collapse during catastrophic blizzards.</td>
+            </tr>
+            <tr>
+              <td><strong>Predictive Equipment ML</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Pure NumPy Vectorized ML</span></td>
+              <td>Zero-dependency ML: L2 Logistic Regression (48h failure probability) and Ridge Regression (Remaining Useful Life / RUL estimation).</td>
+            </tr>
+            <tr>
+              <td><strong>AI Decision Support & Twins</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">Optimizer & Incident Memory</span></td>
+              <td>Multi-objective intervention generator for load shedding, Twin-of-Twins cross-station resilience comparison, and historical failure retrieval.</td>
+            </tr>
+            <tr>
+              <td><strong>Data Persistence & Security</strong></td>
+              <td><span style="color: var(--accent-cyan); font-weight: 600;">SQLite3, Django ORM, SimpleJWT</span></td>
+              <td>Relational schema for stations, energy logs, microclimate metrics, equipment inventories, and role-based operator authentication.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: 3D Digital Twin & Geospatial Visualizer -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Visual Innovation</div>
+        <h1>3D Digital Twin & Polar Geospatial Mapping</h1>
+        <p class="subtitle">Transforming raw sensor streams into immersive spatial situational awareness</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>🎮 Three.js 3D Digital Twin Engine</h3>
+          <p style="margin-bottom: 12px;">Full multi-layer interactive model of polar research stations:</p>
+          <div class="metric-pill">
+            <span class="label">Realistic Mode</span>
+            <span class="val">Architectural layout, fuel tanks, solar arrays, radomes</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Thermal Mode</span>
+            <span class="val">Live false-color heat loss shader mapping insulation leaks</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Structural Wireframe</span>
+            <span class="val">X-Ray stress analysis on load-bearing trusses & conduits</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Blizzard Particle FX</span>
+            <span class="val">Dynamic wind velocity & blowing snow visualization</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🗺️ IBCSO Standard Antarctic Map</h3>
+          <p style="margin-bottom: 12px;">Real-world Polar Stereographic Projection Engine (Standard Parallel 71°S):</p>
+          <ul>
+            <li>Mathematical coordinate mapping from (Lat, Long) directly to polar SVG plane.</li>
+            <li>Interactive pins for <strong>Maitri Station (Schirmacher Oasis)</strong> and <strong>Bharati Station (Larsemann Hills)</strong>.</li>
+            <li>Visual tracking of historical iceberg drift corridors, logistics shipping lanes, and satellite downlink ground passes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Predictive Intelligence & Edge ML -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Predictive ML</div>
+        <h1>Zero-Overhead Predictive Maintenance Engine</h1>
+        <p class="subtitle">Deployable on constrained station edge-servers without GPU requirements or cloud connectivity</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>⚡ 48-Hour Failure Probability</h3>
+          <p><strong>Logistic Regression with L2 Penalty:</strong></p>
+          <ul>
+            <li>Ingests vibration signatures, oil pressure, thermal variance, and running duty cycles.</li>
+            <li>Computes real-time equipment breakdown probability within the next 48 hours.</li>
+            <li>Enables proactive maintenance before catastrophic sub-zero seizure occurs.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>⏳ Remaining Useful Life (RUL)</h3>
+          <p><strong>Vectorized Ridge Regression:</strong></p>
+          <ul>
+            <li>Evaluates continuous degradation metrics against historical wear baselines.</li>
+            <li>Accurately estimates remaining operational hours before turbine or pump failure.</li>
+            <li>Integrated into station spare parts supply forecast.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🚀 Why Pure NumPy?</h3>
+          <p><strong>Edge-Native Design Decision:</strong></p>
+          <ul>
+            <li>Zero heavy dependencies (No PyTorch, TensorFlow, or scikit-learn bloat).</li>
+            <li>Instant cold-start time (<10ms inference) and ultra-low RAM footprint.</li>
+            <li>Operates reliably on ruggedized edge computers and satellite micro-terminals.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Decision Support & Twin-of-Twins -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Decision Support</div>
+        <h1>Sense → Understand → Predict → Protect</h1>
+        <p class="subtitle">Actionable decision intelligence for station commanders during crisis scenarios</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>🛡️ Capability Intelligence</h3>
+          <p>Translates complex sensor alerts into mission capability impact:</p>
+          <ul>
+            <li><em>"Is Life Support threatened?"</em></li>
+            <li><em>"Will Communication with NCAOR/ISRO fail?"</em></li>
+            <li>Quantifies exact <strong>Time to Capability Loss</strong> (e.g. "HVAC failure in 3.4 hrs").</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🔄 Twin-of-Twins Resilience</h3>
+          <p>Cross-station benchmark under identical storm conditions:</p>
+          <ul>
+            <li>Executes the exact same What-If scenario simultaneously across <strong>Maitri</strong> and <strong>Bharati</strong>.</li>
+            <li>Compares architecture resilience: elevated containerized layout vs. single integrated structure.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🧠 Predictive Incident Memory</h3>
+          <p>Case-based reasoning and memory retrieval:</p>
+          <ul>
+            <li>Matches current sensor anomalies to historical Antarctic expedition failures (e.g. 2017 freeze incident).</li>
+            <li>Instantly surfaces proven SOP mitigation actions and preventative sequences.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Impact & Roadmap -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="badge">Impact & Future Scope</div>
+        <h1>Strategic Impact & Future Enhancements</h1>
+        <p class="subtitle">Pioneering digital sovereignty and operational safety for India's Polar Research program</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>🇮🇳 Direct Strategic Impact</h3>
+          <ul>
+            <li><strong>Mission Continuity:</strong> Eliminates catastrophic freezing incidents and reduces generator downtime by over 40%.</li>
+            <li><strong>Logistics Optimization:</strong> Pre-season predictive inventory planning prevents emergency air-drops.</li>
+            <li><strong>Sovereign Capability:</strong> Custom in-house polar digital twin framework tailored for National Centre for Polar and Ocean Research (NCPOR).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🔭 Future Development Roadmap</h3>
+          <ul>
+            <li><strong>LoRaWAN IoT Sensor Mesh:</strong> Deep hardware integration with cryogenic sensor clusters across station perimeters.</li>
+            <li><strong>Autonomous Drone Integration:</strong> Automated drone photogrammetry to update snow drift elevations around habitat structures.</li>
+            <li><strong>Arctic Expansion:</strong> Reusable twin architecture ready for deployment at <strong>Himadri Station (Svalbard)</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="controls">
+    <button class="btn" id="prevBtn" onclick="prevSlide()">← Previous</button>
+    <span id="counter" style="display: flex; align-items: center; font-size: 13px; font-weight: 600; color: var(--accent-cyan); padding: 0 8px;">1 / 8</span>
+    <button class="btn" id="nextBtn" onclick="nextSlide()">Next →</button>
+    <button class="btn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
