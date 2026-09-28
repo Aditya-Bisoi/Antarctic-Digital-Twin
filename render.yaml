@@ -6,7 +6,7 @@ services:
     name: antarctic-digital-twin-backend
     runtime: python
     rootDir: remix-antarctic-digital-twin/backend
-    buildCommand: chmod +x build.sh && ./build.sh
+    buildCommand: bash ./build.sh
     startCommand: gunicorn config.wsgi:application
     plan: free
     envVars:
