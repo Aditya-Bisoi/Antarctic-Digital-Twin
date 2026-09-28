@@ -9,6 +9,7 @@ using pure NumPy vector operations without external sklearn dependencies.
 import os
 import json
 from datetime import datetime
+from typing import Optional, Dict, Any, List, Tuple
 import numpy as np
 from .features import FeatureScaler, FEATURE_NAMES
 from .dataset import generate_polar_degradation_dataset, chronological_train_val_test_split
